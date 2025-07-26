@@ -1,13 +1,17 @@
-import { Activity } from "lucide-react";
+"use client";
+import { Activity, Menu, X } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { ThemeToggle } from "./ThemeToggle";
+import { SignInButton } from "./auth/SignInButton";
+import { Button } from "./ui/button";
 
 export const Header = () => {
   const navItems = [
     { href: "/features", label: "Features" },
-    { href: "/about", label: "About Aury" },
+    { href: "/about", label: "About Ury" },
   ];
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   return (
     <div className="w-full fixed top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="absolute inset-0 border-b border-primary/10">
@@ -43,9 +47,39 @@ export const Header = () => {
               </nav>
               <div className="flex items-center gap-3">
                 <ThemeToggle />
+                <SignInButton />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                >
+                  {isMenuOpen ? (
+                    <X className="h-5 w-5" />
+                  ) : (
+                    <Menu className="h-5 w-5" />
+                  )}
+                </Button>
               </div>
             </div>
           </div>
+
+          {isMenuOpen && (
+            <div className="md:hidden border-t border-primary/10">
+              <nav className="flex flex-col space-y-1 py-4">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-primary/5 rounded-md transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          )}
         </header>
       </div>
     </div>
