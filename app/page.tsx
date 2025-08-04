@@ -4,7 +4,10 @@
 import { Ripple } from "@/components/magicui/ripple";
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { Waves } from "lucide-react";
+import { ArrowRight, Waves } from "lucide-react";
+import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
+import { FeatureSection } from "@/components/featureSection";
 
 export default function Home() {
   const emotions = [
@@ -16,6 +19,7 @@ export default function Home() {
   ];
   const [emotion, setEmotion] = React.useState(50);
   const [mounted, setMounted] = React.useState(false);
+  const [showDialog, setShowDialog] = React.useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -96,19 +100,20 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Enhanced slider with dynamic gradient */}
             <div className="relative px-2">
               <div
                 className={`absolute inset-0 bg-gradient-to-r ${currentEmotion.color} to-transparent blur-2xl -z-10 transition-all duration-500`}
               />
-              {/* <Slider
-                value={[emotion]}
-                onValueChange={(value) => setEmotion(value[0])}
-                min={0}
-                max={100}
-                step={1}
-                className="py-4"
-              /> */}
+              {
+                <Slider
+                  value={[emotion]}
+                  onValueChange={(value) => setEmotion(value[0])}
+                  min={0}
+                  max={100}
+                  step={1}
+                  className="py-4"
+                />
+              }
             </div>
 
             <div className="text-center">
@@ -117,8 +122,27 @@ export default function Home() {
               </p>
             </div>
           </motion.div>
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: mounted ? 1 : 0, y: mounted ? 0 : 20 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            <Button
+              size="lg"
+              onClick={() => setShowDialog(true)}
+              className="relative group h-12 px-8 rounded-full bg-gradient-to-r from-primary via-primary/90 to-secondary hover:to-primary shadow-lg shadow-primary/20 transition-all duration-500 hover:shadow-xl hover:shadow-primary/30"
+            >
+              <span className="relative z-10 font-medium flex items-center gap-2">
+                Begin Your Journey
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </span>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-size-200 bg-pos-0 group-hover:bg-pos-100" />
+            </Button>
+          </motion.div>
         </motion.div>
       </section>
+      <FeatureSection />
     </div>
   );
 }
