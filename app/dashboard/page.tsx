@@ -25,6 +25,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@radix-ui/react-dialog";
+import { DialogHeader } from "@/components/ui/dialog";
+import { AnxietyGames } from "@/components/games/anxietyGames";
 
 const user = {
   name: "John Doe",
@@ -39,6 +47,7 @@ interface DailyStats {
 
 export default function DashboardPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [showMoodModal, setShowMoodModal] = useState(false);
   const [dailyStats, setDailyStats] = useState<DailyStats>({
     moodScore: null,
     completionRate: 100,
@@ -239,7 +248,24 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-3 space-y-6">
+              <AnxietyGames />
+            </div>
+          </div>
         </div>
+
+        <Dialog open={showMoodModal} onOpenChange={setShowMoodModal}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>How are you feeling?</DialogTitle>
+              <DialogDescription>
+                Move the slider to track your current mood
+              </DialogDescription>
+            </DialogHeader>
+            {/* <MoodForm onSuccess={() => setShowMoodModal(false)} /> */}
+          </DialogContent>
+        </Dialog>
       </Container>
     </div>
   );
