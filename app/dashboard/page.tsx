@@ -28,11 +28,13 @@ import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  DialogHeader,
   DialogTitle,
-} from "@radix-ui/react-dialog";
-import { DialogHeader } from "@/components/ui/dialog";
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { AnxietyGames } from "@/components/games/anxietyGames";
+import { MoodForm } from "@/components/humor/moodForm";
+import { ActivitiesLogger } from "@/components/activities/activitiesLogger";
 
 const user = {
   name: "John Doe",
@@ -48,6 +50,7 @@ interface DailyStats {
 export default function DashboardPage() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showMoodModal, setShowMoodModal] = useState(false);
+  const [showActivityLogger, setShowActivityLogger] = useState(false);
   const [dailyStats, setDailyStats] = useState<DailyStats>({
     moodScore: null,
     completionRate: 100,
@@ -55,6 +58,20 @@ export default function DashboardPage() {
     totalActivities: 0,
     lastUpdated: new Date(),
   });
+  const [isSavingMood, setIsSavingMood] = useState(false);
+  const handleMoodSubmit = async (data: { moodScore: number }) => {
+    setIsSavingMood(true);
+    try {
+      setShowMoodModal(false);
+    } catch (error) {
+      console.error("Error saving mood:", error);
+    } finally {
+      setIsSavingMood(false);
+    }
+  };
+  const handleAICheckIn = () => {
+    setShowActivityLogger(true);
+  };
   const wellnessStats = [
     {
       title: "Mood Score",
@@ -171,6 +188,7 @@ export default function DashboardPage() {
                           "justify-center items-center text-center",
                           "transition-all duration-200 group-hover:translate-y-[-2px]"
                         )}
+                        onClick={() => setShowMoodModal(true)}
                       >
                         <div className="w-10 h-10 rounded-full bg-rose-500/10 flex items-center justify-center mb-2">
                           <Heart className="w-5 h-5 text-rose-500" />
@@ -190,6 +208,7 @@ export default function DashboardPage() {
                           "justify-center items-center text-center",
                           "transition-all duration-200 group-hover:translate-y-[-2px]"
                         )}
+                        onClick={handleAICheckIn}
                       >
                         <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mb-2">
                           <BrainCircuit className="w-5 h-5 text-blue-500" />
@@ -254,19 +273,23 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-
-        <Dialog open={showMoodModal} onOpenChange={setShowMoodModal}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>How are you feeling?</DialogTitle>
-              <DialogDescription>
-                Move the slider to track your current mood
-              </DialogDescription>
-            </DialogHeader>
-            {/* <MoodForm onSuccess={() => setShowMoodModal(false)} /> */}
-          </DialogContent>
-        </Dialog>
       </Container>
+      <Dialog open={showMoodModal} onOpenChange={setShowMoodModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>How are you feeling?</DialogTitle>
+            <DialogDescription>
+              Move the slider to track your current mood
+            </DialogDescription>
+          </DialogHeader>
+          <MoodForm onSuccess={() => setShowMoodModal(false)} />
+        </DialogContent>
+      </Dialog>
+      <ActivitiesLogger
+        open={showActivityLogger}
+        onOpenChange={setShowActivityLogger}
+        onActivityLogged={() => setShowActivityLogger(false)}
+      />
     </div>
   );
 }
