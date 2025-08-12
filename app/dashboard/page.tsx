@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import {
   Activity,
   ArrowRight,
@@ -58,6 +59,7 @@ export default function DashboardPage() {
     totalActivities: 0,
     lastUpdated: new Date(),
   });
+  const router = useRouter();
   const [isSavingMood, setIsSavingMood] = useState(false);
   const handleMoodSubmit = async (data: { moodScore: number }) => {
     setIsSavingMood(true);
@@ -71,6 +73,9 @@ export default function DashboardPage() {
   };
   const handleAICheckIn = () => {
     setShowActivityLogger(true);
+  };
+  const handleStartTherapy = () => {
+    router.push("/therapy/new");
   };
   const wellnessStats = [
     {
@@ -162,6 +167,7 @@ export default function DashboardPage() {
                         "bg-gradient-to-r from-primary/90 to-primary hover:from-primary hover:to-primary/90",
                         "transition-all duration-200 group-hover:translate-y-[-2px]"
                       )}
+                      onClick={handleStartTherapy}
                     >
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
